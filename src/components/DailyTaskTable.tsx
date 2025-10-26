@@ -104,7 +104,10 @@ const DailyTaskTable = () => {
         setForms([t]);
         localStorage.removeItem("editingTask");
       }
-    } catch (e) { }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      // Ignore localStorage errors
+    }
   }, []);
 
   async function fetchTasks() {
@@ -158,8 +161,9 @@ const DailyTaskTable = () => {
       }
       setForms([initialForm]);
       await fetchTasks();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      // handle error if needed
+      // Handle error if needed
     } finally {
       setLoading(false);
     }

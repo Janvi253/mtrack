@@ -63,7 +63,7 @@ export default function Navbar() {
               height={300}
               priority
               className="px-3 py-2 rounded-lg shadow-sm ring-1 ring-white/20 bg-white backdrop-blur-sm object-contain group-hover:scale-[1.05] transition-transform"
-              onError={(e:any)=>{ e.currentTarget.style.opacity='0.0'; }}
+              onError={(e: React.SyntheticEvent<HTMLImageElement>) => { e.currentTarget.style.opacity = '0.0'; }}
             />
             <span className="sr-only">MinebeaMitsumi</span>
           </Link>
@@ -84,10 +84,11 @@ export default function Navbar() {
       {showCode && (
         <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-md animate-fade-in flex" role="dialog" aria-modal="true">
           <div className="relative w-full h-full" onClick={close}>
-            <img
+            <Image
               src="/code-preview.png"
               alt="Code reference"
-              className="w-full h-full object-cover md:object-cover select-none"
+              fill
+              className="object-cover md:object-cover select-none"
               draggable={false}
               onClick={e => e.stopPropagation()}
             />

@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import LogoutButton from "./NavbarLogoutButton";
+import Image from "next/image";
 
 interface Props {
   isAuthed: boolean;
@@ -55,10 +56,11 @@ const NavbarClient: React.FC<Props> = ({ isAuthed }) => {
       {showCode && (
         <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-md animate-fade-in flex" role="dialog" aria-modal="true">
           <div className="relative w-full h-full" onClick={close}>
-            <img
+            <Image
               src="/code-preview.png"
               alt="Code reference"
-              className="w-full h-full object-cover md:object-cover select-none" /* object-cover forces full width coverage */
+              fill
+              className="object-cover md:object-cover select-none" /* object-cover forces full width coverage */
               draggable={false}
               onClick={e => e.stopPropagation()} /* prevent closing when clicking the image itself */
             />

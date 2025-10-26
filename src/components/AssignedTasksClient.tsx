@@ -65,7 +65,10 @@ export default function AssignedTasksClient() {
     try {
       localStorage.setItem("editingTask", JSON.stringify(t));
       router.push("/");
-    } catch (e) {}
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      // Ignore localStorage errors
+    }
   }
 
   async function deleteTask(id?: string) {
