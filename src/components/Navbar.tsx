@@ -58,12 +58,12 @@ export default function Navbar() {
           <Link href="/" className="flex items-center group" aria-label="Go to home">
             <Image
               src="/logo.png"
-              alt="Company Logo"
-              width={300}
-              height={300}
+              alt="MinebeaMitsumi Logo"
+              width={180}
+              height={55}
               priority
-              className="px-3 py-2 rounded-lg shadow-sm ring-1 ring-white/20 bg-white backdrop-blur-sm object-contain group-hover:scale-[1.05] transition-transform"
-              onError={(e: React.SyntheticEvent<HTMLImageElement>) => { e.currentTarget.style.opacity = '0.0'; }}
+              unoptimized
+              className="h-12 w-auto px-3 py-2 rounded-lg shadow-sm ring-1 ring-white/20 bg-white backdrop-blur-sm object-contain group-hover:scale-[1.05] transition-transform"
             />
             <span className="sr-only">MinebeaMitsumi</span>
           </Link>
