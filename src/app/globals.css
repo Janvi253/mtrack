@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f3f4f6;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #f3f4f6;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* === Global Scrollbar Hiding ===
+   This hides scrollbars globally while keeping scroll functionality.
+   Applies to modern browsers (WebKit/Blink) and Firefox.
+   NOTE: Consider accessibility/usability—hidden scrollbars can make it
+   harder for users to discover content is scrollable, especially with
+   mouse-only users. Revert instructions below. */
+html,
+body,
+* {
+  /* For Internet Explorer / Edge Legacy */
+  -ms-overflow-style: none;
+  /* For Firefox */
+  scrollbar-width: none;
+}
+
+/* For WebKit-based browsers (Chrome, Safari, new Edge, etc.) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  display: none;
+}
+
+/* Revert (if needed):
+  - Remove the above block OR wrap it in a class like `.no-scrollbars` and
+    only apply it selectively: `.no-scrollbars { scrollbar-width:none; ... }`
+  - Or scope to body only instead of * if component-level scroll indicators
+     are desired. */
+
+button,
+input[type="button"],
+input[type="submit"],
+.btn {
+  cursor: pointer;
+}
+
+/* Hide native calendar icon in date inputs (Chrome, Edge, Safari) */
+input[type="date"].no-calendar::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+}
+/* Remove inner spin buttons / decorations if any */
+input[type="date"].no-calendar::-webkit-inner-spin-button,
+input[type="date"].no-calendar::-webkit-clear-button {
+  display: none;
+}
+/* Firefox - hide calendar icon (uses appearance) */
+input[type="date"].no-calendar {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Standard */
+}

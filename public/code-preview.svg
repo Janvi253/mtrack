@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0f172a" />
+      <stop offset="1" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="code" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#38bdf8" />
+      <stop offset="1" stop-color="#0ea5e9" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" rx="32" fill="url(#bg)" />
+
+  <g filter="url(#glow)" transform="translate(0,-20)">
+    <text x="800" y="380" font-family="'Courier New', monospace" font-size="140" text-anchor="middle" fill="url(#code)" font-weight="700">&lt;Code /&gt;</text>
+  </g>
+  <g font-family="'Courier New', monospace" font-size="28" fill="#94a3b8">
+    <text x="240" y="520">function solve() {</text>
+    <text x="280" y="565">const result = optimize(tasks)</text>
+    <text x="280" y="605">return result?.summary ?? 'No result'</text>
+    <text x="240" y="650">}</text>
+  </g>
+  <rect x="0" y="0" width="1600" height="900" rx="32" fill="none" stroke="#334155" stroke-width="2" />
+</svg>
