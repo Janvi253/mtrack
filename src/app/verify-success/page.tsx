@@ -1,9 +1,9 @@
 "use client";
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
-export default function VerifySuccessPage() {
+function VerifySuccessContent() {
   const sp = useSearchParams();
   const u = sp.get('u');
   return (
@@ -16,5 +16,17 @@ export default function VerifySuccessPage() {
         <Link href="/login-admin" className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded text-sm">Admin Login</Link>
       </div>
     </div>
+  );
+}
+
+export default function VerifySuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-md mx-auto mt-16 bg-white p-6 rounded shadow text-black">
+        <p>Loading...</p>
+      </div>
+    }>
+      <VerifySuccessContent />
+    </Suspense>
   );
 }
