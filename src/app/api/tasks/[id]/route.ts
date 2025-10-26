@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import clientPromise, { DB_NAME } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const cookieHeader = request.headers.get('cookie') || '';
         if (!cookieHeader.includes('session_user=')) {
@@ -12,7 +12,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         const body = await request.json();
         const client = await clientPromise;
     const db = client.db(DB_NAME);
-        const { id: rawId } = await params as { id: string };
+        const { id: rawId } = await params;
         const id = typeof rawId === "string" ? rawId.trim() : String(rawId);
         if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
         try {
@@ -28,7 +28,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const cookieHeader = request.headers.get('cookie') || '';
         if (!cookieHeader.includes('session_user=')) {
@@ -36,7 +36,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         }
         const client = await clientPromise;
     const db = client.db(DB_NAME);
-        const { id: rawId } = await params as { id: string };
+        const { id: rawId } = await params;
         const id = typeof rawId === "string" ? rawId.trim() : String(rawId);
         if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
         let result;
