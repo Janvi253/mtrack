@@ -22,6 +22,12 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // Allow common static file extensions (images, fonts, etc.)
+    const staticExtensions = /\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|otf|pdf|txt)$/i;
+    if (staticExtensions.test(pathname)) {
+        return NextResponse.next();
+    }
+
     const userCookie = request.cookies.get('session_user');
     if (!userCookie) {
         const url = request.nextUrl.clone();
