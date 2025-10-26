@@ -19,11 +19,11 @@ export async function PATCH(request: Request, { params }: { params: { id: string
             console.log('[api/tasks/[id]/PATCH] update id:', id, 'body:', body);
             const result = await db.collection("tasks").updateOne({ _id: new ObjectId(id) }, { $set: body });
             console.log('[api/tasks/[id]/PATCH] updateOne result:', result);
-        } catch (e) {
+        } catch {
             return NextResponse.json({ error: "Invalid id or update failed", id }, { status: 400 });
         }
         return NextResponse.json({ success: true });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to update task" }, { status: 500 });
     }
 }
@@ -48,18 +48,16 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
                 exists = await db.collection("tasks").findOne({ _id: new ObjectId(id) });
                 console.log('[api/tasks/[id]/DELETE] found before delete:', !!exists);
             } catch (err) {
-                const e: any = err;
-                console.error('[api/tasks/[id]/DELETE] error in findOne:', e.message || e);
+                console.error('[api/tasks/[id]/DELETE] error in findOne:', (err as Error).message || err);
             }
             result = await db.collection("tasks").deleteOne({ _id: new ObjectId(id) });
             console.log('[api/tasks/[id]/DELETE] deleteOne result:', result);
         } catch (err) {
-            const e: any = err;
-            console.error('[api/tasks/[id]/DELETE] delete exception:', e.message || e);
-            return NextResponse.json({ error: "Invalid id or delete failed", id, err: e.message || e }, { status: 400 });
+            console.error('[api/tasks/[id]/DELETE] delete exception:', (err as Error).message || err);
+            return NextResponse.json({ error: "Invalid id or delete failed", id, err: (err as Error).message || String(err) }, { status: 400 });
         }
         return NextResponse.json({ deletedCount: result.deletedCount, id });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Failed to delete task" }, { status: 500 });
     }
 }

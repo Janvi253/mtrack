@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
             } else {
                 setError(j.error || 'Login failed');
             }
-        } catch (err: any) {
+        } catch {
             setError('Request failed');
         } finally {
             setLoading(false);

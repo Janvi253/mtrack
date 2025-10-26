@@ -22,7 +22,7 @@ export interface RequestDoc {
     lastUpdate?: string;
     revNo?: string;
   };
-  authority?: any; // Simplified for now
+  authority?: { displayLocation?: string; location?: string; }; // Simplified for now
   tasks?: Array<{ assignee: string; task: string; start?: string; end?: string; estHours?: string; remarks?: string; }>
   createdAt?: string;
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import clientPromise, { DB_NAME } from '@/lib/mongodb';
+import { WithId, Document } from 'mongodb';
 
 export async function GET(request: Request) {
 	try {
@@ -23,8 +24,8 @@ export async function GET(request: Request) {
 			'Overdue': 0,
 		};
 
-		requests.forEach((r: any) => {
-			const s = (r.status || 'Pending');
+		requests.forEach((r: WithId<Document>) => {
+			const s = ((r.status as string) || 'Pending');
 			if (statusCounts[s] === undefined) {
 				statusCounts['Pending'] += 1; // fallback bucket
 			} else {

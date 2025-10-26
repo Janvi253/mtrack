@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     if (!t) return NextResponse.json({ error: 'Missing token' }, { status: 400 });
     const payload = verifyActionToken(t);
     if (!payload) return NextResponse.json({ error: 'Invalid or expired token' }, { status: 400 });
-  const { rid, act, by } = payload as any;
+  const { rid, act, by } = payload as { rid: string; act: 'approve' | 'deny'; by?: string };
     if (!ObjectId.isValid(rid)) return NextResponse.json({ error: 'Bad id' }, { status: 400 });
     const client = await clientPromise;
     const db = client.db(DB_NAME);
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       if (redirect) {
         return NextResponse.redirect(`${origin}/request-form/admin?action=approved&rid=${rid}`);
       }
-      const value: any = update?.value;
+      const value = update?.value;
       return NextResponse.json({ action: 'approved', request: value ? { ...value, _id: value._id.toString() } : null });
     } else {
       const update = await col.findOneAndUpdate(
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       if (redirect) {
         return NextResponse.redirect(`${origin}/request-form/admin?action=denied&rid=${rid}`);
       }
-      const value: any = update?.value;
+      const value = update?.value;
       return NextResponse.json({ action: 'denied', request: value ? { ...value, _id: value._id.toString() } : null });
     }
   } catch (e) {

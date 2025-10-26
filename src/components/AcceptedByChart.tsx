@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface RequestItem { approvedBy?: string; status: string; }
 interface UserItem { username: string; name: string; role: string; }
@@ -24,8 +24,8 @@ const AcceptedByChart: React.FC = () => {
                 const userJson = await userRes.json();
                 setRequests(reqJson);
                 setUsers(userJson);
-            } catch (e: any) {
-                setError(e.message || 'Failed to load');
+            } catch (e) {
+                setError((e as Error).message || 'Failed to load');
             } finally { setLoading(false); }
         })();
     }, []);
@@ -56,7 +56,7 @@ const AcceptedByChart: React.FC = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="name" interval={0} angle={-35} textAnchor="end" height={60} tick={{ fontSize: 10 }} />
                     <YAxis tick={{ fontSize: 10 }} />
-                    <Tooltip formatter={(v: any) => [`${v} approvals`, 'Approved']} />
+                    <Tooltip formatter={(v: number | string) => [`${v} approvals`, 'Approved']} />
                     <Bar dataKey="value" name="Approved" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>

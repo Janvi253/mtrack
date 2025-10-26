@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const db = client.db(DB_NAME);
     const users = await db.collection('users').find({}, { projection: { _id: 0, username: 1, name: 1, role: 1 } }).toArray();
     return NextResponse.json(users.map(u => ({ username: u.username, name: u.name || u.username, role: u.role || 'user' })));
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Failed to load users' }, { status: 500 });
   }
 }

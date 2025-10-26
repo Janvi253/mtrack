@@ -6,10 +6,10 @@ import { sendVerificationEmail } from '@/lib/email';
 
 export async function POST(request: Request) {
     const body = await request.json();
-    let { name, email, username, code, password, role } = body;
-    if (role && typeof role === 'string') role = role.toLowerCase();
+    const { name, email, username, code: codeInput, password, role } = body;
+    const normalizedRole = role && typeof role === 'string' ? role.toLowerCase() : undefined;
     // Accept either legacy password field or new code field, prefer code
-    if (!code && password) code = password; // migrate client not yet updated
+    const code = codeInput || password; // migrate client not yet updated
     if (!name || !email || !username || !code) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return NextResponse.json({ error: "Invalid email" }, { status: 400 });
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const existing = await db.collection("users").findOne({ username });
     if (existing) return NextResponse.json({ error: "User exists" }, { status: 400 });
     const hash = await bcrypt.hash(code, 10);
-    const finalRole = role === 'admin' ? 'admin' : 'user';
+    const finalRole = normalizedRole === 'admin' ? 'admin' : 'user';
     const token = crypto.randomBytes(32).toString('hex');
     const expires = new Date(Date.now() + 1000*60*60*24); // 24h
     const doc = { name, email, username, code: hash, role: finalRole, createdAt: new Date(), emailVerified: false, emailVerificationToken: token, emailVerificationExpires: expires };

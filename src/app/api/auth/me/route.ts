@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const user = await db.collection("users").findOne({ username });
   if (!user) return NextResponse.json({ username });
   return NextResponse.json({ username: user.username, name: user.name, email: user.email, role: user.role || 'user' });
-  } catch (e) {
+  } catch {
     return NextResponse.json({});
   }
 }

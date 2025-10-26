@@ -45,7 +45,9 @@ export default function RequestIndexTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
-  const [role, setRole] = useState<string | null>(null);
+  // Reserved for future role-based filtering
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_role, setRole] = useState<string | null>(null);
   const [actingId, setActingId] = useState<string | null>(null);
 
   function load() {
@@ -89,7 +91,7 @@ export default function RequestIndexTable() {
     if (actingId) return;
     try {
       setActingId(id+status);
-      let body: any = { status };
+      const body: Record<string, string> = { status };
       if (status === 'Rejected') {
         const reason = prompt('Reason for rejection?', 'Rejected');
         if (!reason || !reason.trim()) { setActingId(null); return; }

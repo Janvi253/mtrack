@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise, { DB_NAME } from "@/lib/mongodb";
+import { WithId, Document } from "mongodb";
 
 export async function GET(request: Request) {
   try {
@@ -12,9 +13,9 @@ export async function GET(request: Request) {
   const db = client.db(DB_NAME);
     const tasks = await db.collection('tasks').find({}).toArray();
     // convert ObjectId to string for transport
-    const cleaned = tasks.map((t: any) => ({ ...t, _id: t._id?.toString() }));
+    const cleaned = tasks.map((t: WithId<Document>) => ({ ...t, _id: t._id?.toString() }));
     return NextResponse.json(cleaned);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 });
   }
 }
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
     const result = await db.collection('tasks').insertOne(body);
     const created = { ...body, _id: result.insertedId.toString() };
     return NextResponse.json(created);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to add task' }, { status: 500 });
   }
 }

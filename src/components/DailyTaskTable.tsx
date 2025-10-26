@@ -53,9 +53,10 @@ const DailyTaskTable = () => {
 
   function safeShowPicker(el: HTMLInputElement) {
     if (!el) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fn = (el as any).showPicker;
     if (typeof fn === 'function') {
-      try { fn.call(el); } catch (e) { /* swallow NotAllowedError when not user-initiated */ }
+      try { fn.call(el); } catch { /* swallow NotAllowedError when not user-initiated */ }
     }
   }
 
@@ -123,9 +124,12 @@ const DailyTaskTable = () => {
     try {
       // For each form: POST for new tasks, PATCH for existing tasks (edit)
       // We'll collect created items so we can update local state
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const createdItems: any[] = [];
       await Promise.all(forms.map(async (f) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((f as any)._id) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const { _id, ...rest } = f as any;
           const res = await fetch(`/api/tasks/${_id}`, {
             method: "PATCH",
@@ -163,12 +167,16 @@ const DailyTaskTable = () => {
     router.push("/daily-task");
   }
 
+  // Reserved for future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function handleEdit(id?: string) {
     if (!id) return;
     const t = tasks.find((x) => x._id === id);
     if (t) setForms([t as Task]);
   }
 
+  // Reserved for future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function handleDelete(id?: string) {
     if (!id) return;
     setLoading(true);

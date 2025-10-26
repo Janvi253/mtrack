@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise, { DB_NAME } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId, Document } from 'mongodb';
 import { RequestStatus } from '@/types/request';
 import { sendRequestAcceptedEmail } from '@/lib/email';
 
@@ -12,17 +12,20 @@ async function authOk(request: Request | NextRequest) {
   return cookieHeader.includes('session_user=');
 }
 
+interface RouteContext {
+  params: Promise<{ id: string }> | { id: string };
+}
+
 // Standard Next.js App Router dynamic route handler signature. Some Next.js runtimes surface a warning
 // if params is accessed synchronously; we safely support both by allowing either direct object or promise.
 // Final canonical form: second arg may be a promise; await it then extract params
-export async function PATCH(request: NextRequest, context: any) {
+export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     if (!(await authOk(request))) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const resolved = await context; // if context is already an object, await is a no-op
-    const params = resolved?.params;
-    const id = params.id;
+    const resolved = await context.params; // if context is already an object, await is a no-op
+    const id = resolved.id;
     if (!id) return NextResponse.json({ error: 'Missing id param' }, { status: 400 });
     if (!ObjectId.isValid(id)) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
     const body = await request.json();
@@ -42,9 +45,9 @@ export async function PATCH(request: NextRequest, context: any) {
     if (!valid.includes(nextStatus)) return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
 
     const currentStatus: RequestStatus = existing.status as RequestStatus;
-    const delegatedTo = (existing as any).delegatedTo;
+    const delegatedTo = (existing as WithId<Document> & { delegatedTo?: string }).delegatedTo;
     const actingIsAssignee = currentUser && delegatedTo && currentUser === delegatedTo;
-    const allowed: any = {};
+    const allowed: Record<string, unknown> = {};
 
     function deny() { return NextResponse.json({ error: 'Transition not allowed' }, { status: 403 }); }
 
@@ -83,7 +86,7 @@ export async function PATCH(request: NextRequest, context: any) {
       { $set: allowed },
       { returnDocument: 'after' }
     );
-    let value: any = result?.value;
+    let value = result?.value;
     if (!value) {
       // Some environments may not return the updated doc (older server/version); fetch manually
       value = await col.findOne({ _id: new ObjectId(id) });
@@ -96,15 +99,15 @@ export async function PATCH(request: NextRequest, context: any) {
       (async () => {
         try {
           // Determine an admin email. Simplest approach: first admin user.
-          const adminUser = await db.collection('users').findOne({ role: 'admin' });
+          const adminUser = await db.collection('users').findOne({ role: 'admin' }) as { email?: string; username?: string } | null;
           const adminEmail = adminUser?.email || process.env.FALLBACK_ADMIN_EMAIL;
           if (adminEmail) {
             await sendRequestAcceptedEmail({
               baseUrl: process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
               adminEmail,
-              requestId: doc._id,
-              project: (existing as any).project || 'Request',
-              requester: (existing as any).requester || 'Unknown',
+              requestId: doc._id as string,
+              project: (existing as WithId<Document> & { project?: string }).project || 'Request',
+              requester: (existing as WithId<Document> & { requester?: string }).requester || 'Unknown',
               acceptedBy: currentUser || 'assignee',
               adminUsername: adminUser?.username || adminUser?.email?.split('@')[0]
             });

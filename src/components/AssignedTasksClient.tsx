@@ -77,10 +77,10 @@ export default function AssignedTasksClient() {
     try {
       const encodedId = encodeURIComponent((id || "").toString().trim());
       const res = await fetch(`/api/tasks/${encodedId}`, { method: "DELETE", credentials: 'include' });
-      let body: any = {};
+      let body: Record<string, unknown> = {};
       try {
         body = await res.json().catch(() => ({}));
-      } catch (e) {
+      } catch {
         body = { text: await res.text().catch(() => "") };
       }
       if (!res.ok || body.deletedCount !== 1) {

@@ -28,8 +28,8 @@ const RequestTypeChart: React.FC = () => {
                 if (!res.ok) throw new Error('Failed to load');
                 const json = await res.json();
                 setRequests(json || []);
-            } catch (e: any) {
-                setError(e.message || 'Failed to load');
+            } catch (e) {
+                setError((e as Error).message || 'Failed to load');
             } finally { setLoading(false); }
         })();
     }, []);
@@ -61,7 +61,7 @@ const RequestTypeChart: React.FC = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="type" interval={0} angle={-35} textAnchor="end" height={70} tick={{ fontSize: 10 }} />
                     <YAxis domain={[0, max]} tick={{ fontSize: 10 }} label={{ value: 'Count', angle: -90, position: 'insideLeft', style: { fontSize: 11 } }} />
-                    <Tooltip formatter={(v: any) => [`${v} requests`, 'Requests']} />
+                    <Tooltip formatter={(v: number | string) => [`${v} requests`, 'Requests']} />
                     <Legend verticalAlign="top" align="center" wrapperStyle={{ fontSize: 11, top: 0 }} formatter={() => 'Request Types'} />
                     <Bar dataKey="count" name="Request Types" fill="#2563eb" radius={[4, 4, 0, 0]} />
                 </BarChart>

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const client = await clientPromise;
   const db = client.db(DB_NAME);
   // Require user to have role: 'admin'
-  const u: any = await db.collection("users").findOne({ username, role: 'admin' });
+  const u = await db.collection("users").findOne({ username, role: 'admin' }) as { code?: string; password?: string; emailVerified?: boolean } | null;
   if (!u) return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   if (!u.emailVerified) return NextResponse.json({ error: 'Email not verified. Please check your inbox.' }, { status: 403 });
   const hashed = u.code || u.password || "";

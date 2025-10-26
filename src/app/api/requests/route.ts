@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import clientPromise, { DB_NAME } from '@/lib/mongodb';
 import { RequestDoc } from '@/types/request';
+import { WithId, Document } from 'mongodb';
 
 // Ensure this route is always dynamic (no static caching) so new requests appear immediately
 export const dynamic = 'force-dynamic';
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
             .collection('requests')
             .find({}, { sort: { createdAt: -1 } })
             .toArray();
-        const cleaned = items.map((r: any) => ({ ...r, _id: r._id?.toString() }));
+        const cleaned = items.map((r: WithId<Document>) => ({ ...r, _id: r._id?.toString() }));
         return NextResponse.json(cleaned);
     } catch (e) {
         console.error('GET /api/requests error', e);
@@ -55,8 +56,9 @@ export async function POST(request: NextRequest) {
         const client = await clientPromise;
         const db = client.db(DB_NAME);
     // Remove potential string _id before insertion to satisfy driver typing (ObjectId will be generated)
-    const { _id: _discard, ...toInsert } = doc;
-    const result = await db.collection('requests').insertOne(toInsert as any);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, ...toInsert } = doc;
+    const result = await db.collection('requests').insertOne(toInsert as Document);
     return NextResponse.json({ ...toInsert, _id: result.insertedId.toString() }, { status: 201 });
     } catch (e) {
         console.error('POST /api/requests error', e);

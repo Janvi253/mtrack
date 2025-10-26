@@ -10,15 +10,15 @@ if (!uri) {
 
 const options = {};
 
-let client;
-let clientPromise: Promise<MongoClient>;
-
 declare global {
-  var _mongoClientPromise: any;
+  // eslint-disable-next-line no-var
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
+let clientPromise: Promise<MongoClient>;
+
 if (!global._mongoClientPromise) {
-  client = new MongoClient(uri, options);
+  const client = new MongoClient(uri, options);
   global._mongoClientPromise = client.connect();
 }
 clientPromise = global._mongoClientPromise;

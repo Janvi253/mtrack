@@ -150,7 +150,7 @@ export default function NewRequestPage() {
         return;
       }
       router.push('/request-form/index');
-    } catch (err) {
+    } catch {
       alert('Network error creating request');
     } finally {
       setSubmitting(false);

@@ -67,9 +67,9 @@ export default function MonthlyRequestVolumeChart() {
                     setData(out);
                     setLoading(false);
                 }
-            } catch (e: any) {
+            } catch (e) {
                 if (active) {
-                    setError(e.message || 'Error');
+                    setError((e as Error).message || 'Error');
                     setLoading(false);
                 }
             }

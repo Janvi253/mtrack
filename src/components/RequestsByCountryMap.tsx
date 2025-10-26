@@ -5,12 +5,15 @@ import { scaleLinear } from 'd3-scale';
 import { feature } from 'topojson-client';
 
 interface RequestItem { authority?: { displayLocation?: string; location?: string }; }
-type CountryFeature = any; // simplified feature typing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CountryFeature = any; // simplified feature typing for d3-geo interoperability
 
 // Lazy load world atlas data (kept small using 110m resolution)
 async function loadWorld(): Promise<CountryFeature[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mod: any = await import('world-atlas/countries-110m.json');
-    const fc = feature(mod, (mod as any).objects.countries) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fc: any = feature(mod, mod.objects.countries);
     return fc.features as CountryFeature[];
 }
 
@@ -54,8 +57,8 @@ const RequestsByCountryMap: React.FC = () => {
                 }
                 setWorld(wRes);
                 setData(counts);
-            } catch (e: any) {
-                setError(e.message || 'Failed to load map');
+            } catch (e) {
+                setError((e as Error).message || 'Failed to load map');
             } finally { setLoading(false); }
         })();
     }, []);
@@ -75,6 +78,7 @@ const RequestsByCountryMap: React.FC = () => {
             <div className="flex-1 min-h-0 relative">
                 <svg viewBox="0 0 480 250" className="w-full h-full">
                     <g>
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         {world.map((f: any, i: number) => {
                             const name = (f && f.properties && f.properties.name) ? String(f.properties.name) : '';
                             const count = data[name];

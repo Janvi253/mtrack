@@ -32,7 +32,7 @@ export function verifyActionToken(token: string): ActionPayload | null {
     const expected = crypto.createHmac('sha256', getSecret()).update(b).digest(ENC);
     if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return null;
     try {
-        const json = Buffer.from(b, ENC as any).toString('utf8');
+        const json = Buffer.from(b, ENC as BufferEncoding).toString('utf8');
         const payload: ActionPayload = JSON.parse(json);
         if (payload.exp < Math.floor(Date.now() / 1000)) return null;
         return payload;

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
     const [username, setUsername] = useState("");
@@ -11,7 +10,6 @@ export default function SignupPage() {
     const [codeError, setCodeError] = useState("");
     const [infoMsg, setInfoMsg] = useState("");
     // devVerifyLink no longer displayed; verification required for all users.
-    const router = useRouter();
     const [asAdmin, setAsAdmin] = useState(false);
     const [showCode, setShowCode] = useState(false);
 

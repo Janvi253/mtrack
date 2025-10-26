@@ -35,8 +35,8 @@ const RequestStatusChart = () => {
             }
             const mapped = ORDER.map(o => ({ ...o, value: counts[o.name] || 0 }));
             setData(mapped);
-        } catch (e: any) {
-            setError(e.message || 'Failed to load');
+        } catch (e) {
+            setError((e as Error).message || 'Failed to load');
         } finally { setLoading(false); }
     }
 

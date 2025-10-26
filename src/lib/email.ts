@@ -1,4 +1,4 @@
-// @ts-ignore - using nodemailer without types (ensure it is installed). If types needed, install @types/nodemailer.
+// @ts-expect-error - using nodemailer without types (ensure it is installed). If types needed, install @types/nodemailer.
 import nodemailer from 'nodemailer';
 import { createActionToken } from './actionToken';
 

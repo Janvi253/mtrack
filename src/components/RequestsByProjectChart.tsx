@@ -27,8 +27,8 @@ const RequestsByProjectChart: React.FC = () => {
                 if (!res.ok) throw new Error('Failed to load');
                 const json = await res.json();
                 setRequests(json || []);
-            } catch (e: any) {
-                setError(e.message || 'Failed to load');
+            } catch (e) {
+                setError((e as Error).message || 'Failed to load');
             } finally { setLoading(false); }
         })();
     }, []);
@@ -84,7 +84,7 @@ const RequestsByProjectChart: React.FC = () => {
                     <PolarGrid stroke="#e5e7eb" />
                     <PolarAngleAxis dataKey="project" tick={{ fontSize: 10 }} />
                     <PolarRadiusAxis angle={90} domain={[0, max]} tick={{ fontSize: 10 }} />
-                    <Tooltip formatter={(v: any) => [`${v} requests`, 'Requests']} />
+                    <Tooltip formatter={(v: number | string) => [`${v} requests`, 'Requests']} />
                     <Legend verticalAlign="top" align="center" wrapperStyle={{ fontSize: 11, top: 0 }} formatter={() => 'Project Requests'} />
                     <Radar name="Project Requests" dataKey="count" stroke="#2563eb" fill="#3b82f6" fillOpacity={0.55} />
                 </RadarChart>

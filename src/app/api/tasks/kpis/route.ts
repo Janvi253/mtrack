@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise, { DB_NAME } from "@/lib/mongodb";
+import { WithId, Document } from "mongodb";
 
 export async function GET(request: Request) {
   try {
@@ -20,9 +21,9 @@ export async function GET(request: Request) {
     let completed = 0;
     let inProgress = 0;
     
-    tasks.forEach((task: any) => {
-      const status = task.status || '';
-      const dueDateStr = task.dueDate || '';
+    tasks.forEach((task: WithId<Document>) => {
+      const status = (task.status as string) || '';
+      const dueDateStr = (task.dueDate as string) || '';
       
       if (status.toLowerCase() === 'done') {
         completed++;

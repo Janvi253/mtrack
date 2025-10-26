@@ -28,8 +28,8 @@ export default function Navbar() {
   useEffect(() => { refreshAuth(); }, [refreshAuth]);
   useEffect(() => {
     function handler() { refreshAuth(); }
-    window.addEventListener('auth-changed', handler as any);
-    return () => window.removeEventListener('auth-changed', handler as any);
+    window.addEventListener('auth-changed', handler);
+    return () => window.removeEventListener('auth-changed', handler);
   }, [refreshAuth]);
 
   const [showCode, setShowCode] = useState(false);

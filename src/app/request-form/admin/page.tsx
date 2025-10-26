@@ -45,7 +45,7 @@ export default function AdminRequestsPage() {
         load();
         fetch('/api/auth/me', { credentials: 'include' })
             .then(r => r.ok ? r.json() : {})
-            .then((j: any) => { if (mount && j && j.username){ setCurrentUser(j.username); setRole(j.role || null);} });
+            .then((j: { username?: string; role?: string }) => { if (mount && j && j.username){ setCurrentUser(j.username); setRole(j.role || null);} });
         return () => { mount = false; };
     }, []);
 
@@ -69,7 +69,7 @@ export default function AdminRequestsPage() {
         }
         try {
             setActing(id + action);
-            const body: any = { status: action === 'approve' ? 'Approved' : 'Rejected' };
+            const body: Record<string, string> = { status: action === 'approve' ? 'Approved' : 'Rejected' };
             if (feedback) body.managerFeedback = feedback.trim();
             const res = await fetch(`/api/requests/${id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             if (!res.ok) {
